@@ -1,6 +1,5 @@
 from langchain_core.tools import tool
 
-
 @tool
 def note_tool(note):
     """
@@ -9,5 +8,8 @@ def note_tool(note):
     Args:
         note: the text note to save
     """
-    with open("notes.txt", "a") as f:
-        f.write(note + "\n")
+    try:
+        with open("data/notes.txt", "a") as f:
+            f.write(note + "\n")
+    except Exception as e:
+        print(f"Error saving note: {e}")

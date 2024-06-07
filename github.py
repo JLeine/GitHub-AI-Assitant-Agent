@@ -42,7 +42,9 @@ def find_md_files(owner, repo):
     docs = []
 
     for file in md_files:
-        docs.append(fetch_md_file_content(owner, repo, file))
+        doc = fetch_md_file_content(owner, repo, file)
+        if doc:
+            docs.append(doc)
 
     return docs
 
@@ -73,21 +75,45 @@ def fetch_md_file_content(owner, repo, path):
         return doc
     return None
 
-
 def load_issues(issues):
     docs = []
     for entry in issues:
         metadata = {
             "author": entry["user"]["login"],
             "comments": entry["comments"],
-            #"body": entry["body"],
             "labels": entry["labels"],
             "created_at": entry["created_at"],
         }
         data = entry["title"]
-        #if entry["body"]:
-        #    data += entry["body"]
         doc = Document(page_content=data, metadata=metadata)
         docs.append(doc)
 
     return docs
+
+def main():
+    owner = input("Enter the GitHub repository owner: ")
+    repo = input("Enter the GitHub repository name: ")
+
+    choice = input("What do you want to fetch? (issues/md_files): ").lower()
+
+    if choice == "issues":
+        issues = fetch_github_issues(owner, repo)
+        if issues:
+            print("Fetched issues:")
+            for issue in issues:
+                print(issue)
+        else:
+            print("No issues found or an error occurred.")
+    elif choice == "md_files":
+        md_files = find_md_files(owner, repo)
+        if md_files:
+            print("Fetched markdown files:")
+            for md_file in md_files:
+                print(md_file)
+        else:
+            print("No markdown files found or an error occurred.")
+    else:
+        print("Invalid choice. Please select either 'issues' or 'md_files'.")
+
+if __name__ == "__main__":
+    main()
