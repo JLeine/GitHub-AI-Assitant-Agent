@@ -16,6 +16,7 @@ def fetch_confluence(space, include_attachments=False, batchsize=5, max_pages=5)
         )
         documents = loader.load(space_key=space, include_attachments=include_attachments, limit=batchsize,
                                 max_pages=max_pages)
+        print(documents)
         return documents
     except Exception as e:
         print(f"Error fetching documents from Confluence: {e}")

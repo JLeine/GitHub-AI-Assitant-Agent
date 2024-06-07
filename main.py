@@ -14,7 +14,7 @@ from github import find_md_files
 from note import note_tool
 from pdf import fetch_online_pdf_from_file
 
-def connect_to_vstore(github="default"):
+def connect_to_vstore(collection_name="default"):
     embeddings = OpenAIEmbeddings()
     ASTRA_DB_API_ENDPOINT = os.getenv("ASTRA_DB_API_ENDPOINT")
     ASTRA_DB_APPLICATION_TOKEN = os.getenv("ASTRA_DB_APPLICATION_TOKEN")
@@ -27,7 +27,7 @@ def connect_to_vstore(github="default"):
 
     vstore = AstraDBVectorStore(
         embedding=embeddings,
-        collection_name=("%s" % github),
+        collection_name=("%s" % collection_name),
         api_endpoint=ASTRA_DB_API_ENDPOINT,
         token=ASTRA_DB_APPLICATION_TOKEN,
         namespace=ASTRA_DB_KEYSPACE,
@@ -67,7 +67,9 @@ def main():
             print(f"Error deleting PDF collection: {e}")
 
         vstore_pdf = connect_to_vstore("pdf")
-        vstore_pdf.add_documents(alldocs)
+
+        for doc in alldocs:
+            vstore_pdf.add_documents(doc)
 
     add_confluence_pages_to_vectorstore = input("Do you want to import Confluence Pages? (y/N): ").lower() in ["yes", "y"]
 
