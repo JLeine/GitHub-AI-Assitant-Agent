@@ -1,0 +1,6 @@
+# The following is an example of public PDF files. Each URL in one line
+https://www.ovb.de/fileadmin/assets/Dokumente/ovb_germany/Vita_VAG_Christian_Hoefel.pdf
+https://www.ovb.de/fileadmin/assets/Dokumente/ovb_germany/Vita_VAG_Frank_Burow.pdf
+https://www.ovb.de/fileadmin/assets/Dokumente/ovb_germany/dokumente/Zoom_Merkblatt_Datenschutz_lang.pdf
+https://www.ovb.de/fileadmin/assets/Dokumente/ovb_germany/dokumente/DE_de_magazin_ts_2020.pdf
+https://www.ovb.de/fileadmin/assets/Dokumente/ovb_germany/dokumente/OVB_V_AG_Vita_Mario_Freis_D.pdf
