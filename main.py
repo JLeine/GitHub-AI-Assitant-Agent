@@ -1,18 +1,19 @@
-from dotenv import load_dotenv
 import os
 
+from dotenv import load_dotenv
+from langchain import hub
+from langchain.agents import AgentExecutor
+from langchain.agents import create_tool_calling_agent
+from langchain.tools.retriever import create_retriever_tool
+from langchain_astradb import AstraDBVectorStore
 from langchain_community.agent_toolkits import SlackToolkit
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
-from langchain_astradb import AstraDBVectorStore
-from langchain.agents import create_tool_calling_agent
-from langchain.agents import AgentExecutor
-from langchain.tools.retriever import create_retriever_tool
-from langchain import hub
 
 from confluence import fetch_confluence
 from github import find_md_files
 from note import note_tool
-from pdf import fetch_online_pdf_from_file
+from pdf import fetch_online_pdf_from_file, fetch_pdfs_from_folder
+
 
 def connect_to_vstore(collection_name="default"):
     embeddings = OpenAIEmbeddings()
@@ -59,22 +60,29 @@ def main():
     add_pdf_to_vectorstore = input("Do you want to import the PDF files? (y/N): ").lower() in ["yes", "y"]
 
     if add_pdf_to_vectorstore:
-        alldocs = fetch_online_pdf_from_file("data/pdf_urls.txt")
+        all_online_docs = fetch_online_pdf_from_file()
+        all_offline_docs = fetch_pdfs_from_folder()
 
         try:
             vstore_pdf.delete_collection()
         except Exception as e:
             print(f"Error deleting PDF collection: {e}")
 
+        print("Connecting to vector db")
         vstore_pdf = connect_to_vstore("pdf")
 
-        for doc in alldocs:
+        for doc in all_online_docs:
+            print(f"Adding doc {doc}")
+            vstore_pdf.add_documents(doc)
+
+        for doc in all_offline_docs:
+            print(f"Adding doc {doc}")
             vstore_pdf.add_documents(doc)
 
     add_confluence_pages_to_vectorstore = input("Do you want to import Confluence Pages? (y/N): ").lower() in ["yes", "y"]
 
     if add_confluence_pages_to_vectorstore:
-        confluence_pages = fetch_confluence("solar")
+        confluence_pages = fetch_confluence("KUS", False, 10, 1000)
 
         try:
             vstore_confluence.delete_collection()

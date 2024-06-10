@@ -1,5 +1,7 @@
-from langchain_community.document_loaders import PyPDFLoader
 import os
+
+from langchain_community.document_loaders import PyPDFLoader
+
 
 def fetch_online_pdf(url):
     loader = PyPDFLoader(url, extract_images=False)
@@ -7,9 +9,10 @@ def fetch_online_pdf(url):
     print(pages)
     return pages
 
-def fetch_online_pdf_from_file(file_path):
+
+def fetch_online_pdf_from_file(urls_to_fetch='./data/pdf_urls.txt'):
     all_pages = []
-    with open(file_path, 'r') as file:
+    with open(urls_to_fetch, 'r') as file:
         for line in file:
             url = line.strip()
             if url.startswith("http"):
@@ -20,7 +23,8 @@ def fetch_online_pdf_from_file(file_path):
                     print(f"Failed to fetch PDF from URL: {url}. Error: {e}")
     return all_pages
 
-def fetch_pdfs_from_folder(folder_path):
+
+def fetch_pdfs_from_folder(folder_path='./data/pdfs'):
     all_pages = []
     for filename in os.listdir(folder_path):
         if filename.endswith(".pdf"):
@@ -35,11 +39,9 @@ def fetch_pdfs_from_folder(folder_path):
 
 if __name__ == "__main__":
     # Fetch online PDFs from URLs in a file
-    file_path = './data/pdf_urls.txt'
-    online_pages = fetch_online_pdf_from_file(file_path)
+    online_pages = fetch_online_pdf_from_file()
     print(online_pages)
 
     # Fetch local PDFs from a folder
-    folder_path = './data/pdfs'
-    local_pages = fetch_pdfs_from_folder(folder_path)
+    local_pages = fetch_pdfs_from_folder()
     print(local_pages)

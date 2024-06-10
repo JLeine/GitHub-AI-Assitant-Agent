@@ -24,8 +24,7 @@ def fetch_confluence(space, include_attachments=False, batchsize=5, max_pages=5)
 
 
 if __name__ == "__main__":
-    # Beispiel: fetch documents from Confluence space 'MYSPACE'
-    space = 'SOLAR'
-    documents = fetch_confluence(space)
+    space = input("Enter the Confluence Space you would like to import: ")
+    documents = fetch_confluence(space, False, 10, 1000)
     for doc in documents:
         print(doc)
